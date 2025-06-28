@@ -1,4 +1,4 @@
-# DocSpot 🩺
+# DocSpot 
 
 DocSpot is a full-stack Doctor Appointment Booking System built with the **MERN stack** (MongoDB, Express.js, React, Node.js). It supports role-based access for **Users**, **Doctors**, and **Admins**. Users can book appointments, doctors can manage availability, and admins can monitor platform activity.
 
