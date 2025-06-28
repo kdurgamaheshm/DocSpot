@@ -4,12 +4,6 @@ DocSpot is a full-stack Doctor Appointment Booking System built with the **MERN 
 
 ---
 
-## 🔗 Live Demo (Optional)
-
-> Coming soon or host it on **Vercel** / **Netlify** + **Render** / **Railway** / **Fly.io**
-
----
-
 ##  Features
 
 ###  Authentication
