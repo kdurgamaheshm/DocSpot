@@ -10,7 +10,7 @@ DocSpot is a full-stack Doctor Appointment Booking System built with the **MERN 
 
 ---
 
-## 🧩 Features
+##  Features
 
 ###  Authentication
 - Secure login/register with JWT
