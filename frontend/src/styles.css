@@ -1,0 +1,50 @@
+/* styles.css */
+html, body, #root {
+    height: 100%;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: white;
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.content-box {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    width: 100%;
+    max-width: 400px;
+}
+
+.content-box input,
+.content-box button {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.8rem;
+    border-radius: 5px;
+    border: none;
+}
+
+.content-box button {
+    background-color: #00c851;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}

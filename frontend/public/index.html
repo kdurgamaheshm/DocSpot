@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <title>DocSpot – Fullscreen UI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: white;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: #a8ff78;
+      background: linear-gradient(to right, #78ffd6, #a8ff78);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .nav-links a {
+      margin: 0 10px;
+      color: #111;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    #root {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .content-box {
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      width: 100%;
+      max-width: 400px;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1 style="color:#0047ff; font-weight:700;">DocSpot</h1>
+  <nav class="nav-links">
+    <a href="#">Dashboard</a>
+    <a href="#">Appointments</a>
+    <a href="#">Book Appointment</a>
+    <a href="#">Edit Profile</a>
+    <a href="#">Change Password</a>
+    <a href="#">Logout</a>
+  </nav>
+</header>
+
+<div id="root">
+  <div class="content-box">
+    <!-- React content or Login form will render here -->
+    <p style="color:white; text-align:center;">Loading...</p>
+  </div>
+</div>
+</body>
+</html>
