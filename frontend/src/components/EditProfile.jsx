@@ -1,28 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
+import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const EditProfile = () => {
+  const { user, setUser } = useContext(AuthContext);
   const [formData, setFormData] = useState({ username: '', email: '' });
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const res = await axios.get('/api/auth/me', { withCredentials: true });
-        setFormData({
-          username: res.data.username || '',
-          email: res.data.email || '',
-        });
-        setLoading(false);
-      } catch (err) {
-        console.error('Error loading profile:', err);
-        setLoading(false);
-      }
-    };
-    fetchProfile();
-  }, []);
+    if (user) {
+      setFormData({ username: user.username || '', email: user.email || '' });
+      setLoading(false);
+    }
+  }, [user]);
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -31,52 +23,57 @@ const EditProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put('/api/auth/update-profile', formData, {
+      const res = await axios.put('/api/auth/update-profile', formData, {
         withCredentials: true,
       });
-      alert(' Profile updated!');
-      navigate('/app/profile'); // 👈 redirect back to profile page
+      setUser(res.data.user);
+      alert('Profile updated!');
+      navigate('/app/profile');
     } catch (err) {
       console.error(err);
-      alert(' Failed to update profile.');
+      alert('Failed to update profile.');
     }
   };
 
   if (loading) return <p className="text-center mt-10">Loading...</p>;
 
   return (
-      <div className="max-w-lg mx-auto p-6 bg-white shadow rounded-lg mt-10">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-700">Edit Profile</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block mb-1 font-medium text-black">Username</label>
-            <input
-                type="text"
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
-                className="w-full border border-green-400 rounded px-3 py-2 text-black"
-                required
-            />
-          </div>
-          <div>
-            <label className="block mb-1 font-medium text-black">Email</label>
-            <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full border border-green-400 text-black rounded px-3 py-2"
-                required
-            />
-          </div>
-          <button
-              type="submit"
-              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-          >
-            Save Changes
-          </button>
-        </form>
+      <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-green-100 tpx-4">
+        <div className="w-full max-w-2xl mx-auto bg-white rounded-xl shadow-xl p-8">
+          <h2 className="text-3xl font-bold mb-6 text-center text-green-700">Edit Your Profile</h2>
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label className="block mb-1 font-semibold text-gray-800">Username</label>
+              <input
+                  type="text"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border border-green-400 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-green-300"
+                  required
+              />
+            </div>
+            <div>
+              <label className="block mb-1 font-semibold text-gray-800">Email</label>
+              <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border border-green-400 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-green-300"
+                  required
+              />
+            </div>
+            <div className="text-center">
+              <button
+                  type="submit"
+                  className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-lg shadow"
+              >
+                Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
   );
 };

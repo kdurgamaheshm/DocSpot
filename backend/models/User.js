@@ -20,6 +20,11 @@ const userSchema = new mongoose.Schema({
     enum: ['Admin', 'Doctor', 'User'],
     default: 'User',
   },
+  phone: {
+    type: Number,
+    required: true,
+  },
+
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

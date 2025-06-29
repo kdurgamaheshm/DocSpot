@@ -18,7 +18,7 @@ const Header = () => {
     return (
         <>
             {/* Fixed Header */}
-            <header className="max-h-screenbg-green-300 shadow-md px-4 py-2 flex justify-between items-center fixed w-full z-50 top-0 left-0">
+            <header className="overflow-y-auto min-h-screen bg-green-300 shadow-md px-4 py-2 flex justify-between items-center fixed w-full z-50 top-0 left-0">
                 <div
                     className="text-blue-600 font-bold text-xl cursor-pointer select-none"
                     onClick={() => {

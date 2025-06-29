@@ -16,6 +16,8 @@ import EditProfile from './components/EditProfile';
 import Appointments from './components/Appointments';
 import Header from './components/Header';
 import './styles.css';
+import AdminDashboard from "./components/AdminDashboard";
+import ProfilePage from "./components/ProfilePage";
 
 const PublicLayout = () => {
   const location = useLocation();
@@ -60,6 +62,8 @@ function App() {
               <Route path="edit-profile" element={<EditProfile />} />
               <Route path="change-password" element={<ChangePassword />} />
               <Route path="history" element={<AppointmentHistory />} />
+                <Route path="admin-dashboard" element={<AdminDashboard />} />
+                <Route path="profile-page" element={<ProfilePage />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />

@@ -15,10 +15,10 @@ const router = express.Router();
 
 // Register
 router.post('/register', async (req, res) => {
-  const { username, email, password, role } = req.body;
+  const { username, email, password, role,phone } = req.body;
 
-  if (!username || !email || !password) {
-    return res.status(400).json({ message: 'Please provide username, email and password' });
+  if (!username || !email || !password ||!phone) {
+    return res.status(400).json({ message: 'Please provide username, email and password,phone' });
   }
 
   try {
@@ -32,6 +32,8 @@ router.post('/register', async (req, res) => {
       email,
       password: hashedPassword,
       role: role || 'User',
+      phone
+
     });
 
     await user.save();
@@ -81,7 +83,7 @@ router.post('/login', async (req, res) => {
       },
     });
   } catch (err) {
-    console.error("🔥 LOGIN ERROR:", err); // 🔍 Log the real issue
+    console.error(" LOGIN ERROR:", err);
     res.status(500).json({ message: 'Server error' });
   }
 });

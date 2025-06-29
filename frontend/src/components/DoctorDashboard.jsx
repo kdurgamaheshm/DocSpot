@@ -1,14 +1,12 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 
 const DoctorDashboard = () => {
   const { user } = useContext(AuthContext);
-  const navigate = useNavigate();
 
   const [todaysAppointments, setTodaysAppointments] = useState([
-    { id: 1, patient: 'John Doe', time: '10:00 AM', status: 'Confirmed' },
-    { id: 2, patient: 'Jane Smith', time: '11:30 AM', status: 'Pending' },
+    { id: '1', patient: 'John Doe', time: '10:00 AM', status: 'Confirmed' },
+    { id: '2', patient: 'Jane Smith', time: '11:30 AM', status: 'Pending' },
   ]);
 
   const [availability, setAvailability] = useState([
@@ -25,7 +23,7 @@ const DoctorDashboard = () => {
   ]);
 
   const [profile, setProfile] = useState({
-    name: 'Dr. House',
+    name: 'Dr. Mahesh ',
     specialization: 'Diagnostics',
     bio: 'Experienced diagnostician.',
   });
@@ -34,11 +32,11 @@ const DoctorDashboard = () => {
   const [newAvailabilityDate, setNewAvailabilityDate] = useState('');
   const [newAvailabilityTime, setNewAvailabilityTime] = useState('');
 
-  // Access Restriction
+  // Restrict access
   if (!user || user.role !== 'Doctor') {
     return (
         <div className="max-h-screen flex items-center justify-center text-red-600 text-xl font-semibold">
-           Access Denied: Doctors Only
+          Access Denied: Doctors Only
         </div>
     );
   }
@@ -64,12 +62,34 @@ const DoctorDashboard = () => {
     setProfile({ ...profile, [e.target.name]: e.target.value });
   };
 
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      await fetch(`/api/bookings/${id}/status`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      setTodaysAppointments((prev) =>
+          prev.map((appt) =>
+              appt.id === id ? { ...appt, status: newStatus } : appt
+          )
+      );
+      alert(' Status updated successfully');
+    } catch (err) {
+      alert(' Failed to update status');
+    }
+  };
+
   return (
       <div className="min-h-screen bg-gray-100 p-6 text-gray-900 max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold mb-6 text-center text-blue-700">Doctor Dashboard</h1>
 
         <div className="grid gap-6 md:grid-cols-2">
-          {/* Appointments Today */}
+          {/* Today's Appointments */}
           <section className="bg-white rounded-lg shadow p-5">
             <h2 className="text-xl font-semibold mb-4">Today's Appointments</h2>
             {todaysAppointments.length === 0 ? (
@@ -88,7 +108,28 @@ const DoctorDashboard = () => {
                       <tr key={appt.id} className="border-t">
                         <td className="px-2 py-1">{appt.patient}</td>
                         <td className="px-2 py-1">{appt.time}</td>
-                        <td className="px-2 py-1">{appt.status}</td>
+                        <td className="px-2 py-1">
+                          <select
+                              value={appt.status}
+                              onChange={(e) => handleStatusChange(appt.id, e.target.value)}
+                              className={`px-2 py-1 border rounded ${
+                                  appt.status === 'Confirmed'
+                                      ? 'bg-green-100 text-green-800'
+                                      : appt.status === 'Pending'
+                                          ? 'bg-yellow-100 text-yellow-800'
+                                          : appt.status === 'Cancelled'
+                                              ? 'bg-red-100 text-red-800'
+                                              : appt.status === 'Completed'
+                                                  ? 'bg-blue-100 text-blue-800'
+                                                  : ''
+                              }`}
+                          >
+                            <option value="Pending">Pending</option>
+                            <option value="Confirmed">Confirmed</option>
+                            <option value="Cancelled">Cancelled</option>
+                            <option value="Completed">Completed</option>
+                          </select>
+                        </td>
                       </tr>
                   ))}
                   </tbody>
@@ -96,7 +137,7 @@ const DoctorDashboard = () => {
             )}
           </section>
 
-          {/* Availability */}
+          {/* Manage Availability */}
           <section className="bg-white rounded-lg shadow p-5">
             <h2 className="text-xl font-semibold mb-4">Manage Availability</h2>
             <div className="flex flex-col gap-2 mb-4">
@@ -116,7 +157,7 @@ const DoctorDashboard = () => {
                   onClick={handleAddAvailability}
                   className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
               >
-                 Add Availability
+                Add Availability
               </button>
             </div>
             <ul className="list-disc ml-5">
@@ -136,10 +177,7 @@ const DoctorDashboard = () => {
             ) : (
                 <ul className="space-y-2">
                   {patients.map((patient) => (
-                      <li
-                          key={patient.id}
-                          className="border p-2 rounded bg-gray-50"
-                      >
+                      <li key={patient.id} className="border p-2 rounded bg-gray-50">
                         {patient.name}
                         <br />
                         <span className="text-sm text-gray-500">
@@ -179,7 +217,7 @@ const DoctorDashboard = () => {
           </section>
         </div>
 
-        {/* Profile Edit */}
+        {/* Profile Section */}
         <section className="mt-8 bg-white rounded-lg shadow p-5 max-w-3xl mx-auto">
           <h2 className="text-xl font-semibold mb-4">Profile Settings</h2>
           {editProfile ? (
@@ -187,7 +225,7 @@ const DoctorDashboard = () => {
                   onSubmit={(e) => {
                     e.preventDefault();
                     setEditProfile(false);
-                    alert(' Profile updated!');
+                    alert('Profile updated!');
                   }}
                   className="space-y-4"
               >
@@ -213,10 +251,7 @@ const DoctorDashboard = () => {
                     placeholder="Bio"
                 />
                 <div className="flex gap-3">
-                  <button
-                      type="submit"
-                      className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-                  >
+                  <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
                     Save
                   </button>
                   <button

@@ -3,7 +3,7 @@ import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 
 const ProfilePage = () => {
-  const { user, setUser } = useContext(AuthContext); // ensure setUser exists if you're updating user
+  const { user, setUser } = useContext(AuthContext);
   const [appointments, setAppointments] = useState([]);
   const [loadingAppointments, setLoadingAppointments] = useState(true);
   const [editing, setEditing] = useState(false);
@@ -12,7 +12,6 @@ const ProfilePage = () => {
     email: '',
   });
 
-  // Initialize form with user data
   useEffect(() => {
     if (user) {
       setFormData({
@@ -22,7 +21,6 @@ const ProfilePage = () => {
     }
   }, [user]);
 
-  // Fetch appointments based on user role
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
@@ -43,7 +41,6 @@ const ProfilePage = () => {
     fetchAppointments();
   }, [user]);
 
-  // Handle input changes
   const handleChange = (e) => {
     setFormData(prev => ({
       ...prev,
@@ -51,17 +48,14 @@ const ProfilePage = () => {
     }));
   };
 
-  // Save edited profile
   const handleSave = async (e) => {
     e.preventDefault();
 
     try {
-      // You can update this endpoint with your backend route
       const res = await axios.put('/api/auth/profile', formData, {
         withCredentials: true,
       });
 
-      // Optionally update context
       if (res.data && setUser) {
         setUser(res.data);
       }
@@ -74,16 +68,37 @@ const ProfilePage = () => {
     }
   };
 
+  const handleStatusChange = async (appointmentId, newStatus) => {
+    try {
+      await axios.put(
+          `/api/bookings/${appointmentId}/status`,
+          { status: newStatus },
+          { withCredentials: true }
+      );
+
+      setAppointments((prev) =>
+          prev.map((appt) =>
+              appt._id === appointmentId ? { ...appt, status: newStatus } : appt
+          )
+      );
+
+      alert('✅ Status updated successfully');
+    } catch (error) {
+      console.error('Error updating status:', error);
+      alert('❌ Failed to update status');
+    }
+  };
+
   if (!user) {
     return (
         <div className="text-center mt-10 text-lg text-gray-600">
-          ⏳ Loading user data...
+          Loading user data...
         </div>
     );
   }
 
   return (
-      <div className="max-h-screen bg-gray-50 py-10 px-4 md:px-10">
+      <div className="max-h-screen bg-white py-10 px-4 md:px-10">
         <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-md p-6">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-3xl font-bold text-blue-700">Profile</h1>
@@ -97,7 +112,6 @@ const ProfilePage = () => {
             )}
           </div>
 
-          {/* Profile Form or Display */}
           {editing ? (
               <form onSubmit={handleSave} className="space-y-4 mb-6">
                 <div>
@@ -152,13 +166,12 @@ const ProfilePage = () => {
               </div>
           )}
 
-          {/* Appointments Section */}
           <h2 className="text-2xl font-semibold text-blue-700 mb-4">
-            📅 Appointments
+            Appointments
           </h2>
 
           {loadingAppointments ? (
-              <p className="text-gray-500">⏳ Loading appointments...</p>
+              <p className="text-gray-500"> Loading appointments...</p>
           ) : appointments.length === 0 ? (
               <p className="text-gray-500">No appointments found.</p>
           ) : (
@@ -181,18 +194,43 @@ const ProfilePage = () => {
                             : appt.user?.username + ` (${appt.user?.email})`}
                       </p>
                       <p>
-                        <strong>Status:</strong>{' '}
-                        <span
-                            className={`px-2 py-1 rounded-full text-sm font-medium ${
-                                appt.status === 'Confirmed'
-                                    ? 'bg-green-100 text-green-800'
-                                    : appt.status === 'Cancelled'
-                                        ? 'bg-red-100 text-red-800'
-                                        : 'bg-yellow-100 text-yellow-800'
-                            }`}
-                        >
-                    {appt.status}
-                  </span>
+                        <strong className="text-black">Status:</strong>{' '}
+                        {user.role === 'Doctor' ? (
+                            <select
+                                value={appt.status}
+                                onChange={(e) =>
+                                    handleStatusChange(appt._id, e.target.value)
+                                }
+                                className={`px-2 py-1 rounded text-sm font-medium border ${
+                                    appt.status === 'Confirmed'
+                                        ? 'bg-green-100 text-green-800'
+                                        : appt.status === 'Cancelled'
+                                            ? 'bg-red-100 text-red-800'
+                                            : appt.status === 'Completed'
+                                                ? 'bg-blue-100 text-blue-800'
+                                                : 'bg-yellow-100 text-yellow-800'
+                                }`}
+                            >
+                              <option value="Pending">Pending</option>
+                              <option value="Confirmed">Confirmed</option>
+                              <option value="Cancelled">Cancelled</option>
+                              <option value="Completed">Completed</option>
+                            </select>
+                        ) : (
+                            <span
+                                className={`px-2 py-1 rounded text-sm font-medium ${
+                                    appt.status === 'Confirmed'
+                                        ? 'bg-green-100 text-green-800'
+                                        : appt.status === 'Cancelled'
+                                            ? 'bg-red-100 text-red-800'
+                                            : appt.status === 'Completed'
+                                                ? 'bg-blue-100 text-blue-800'
+                                                : 'bg-yellow-100 text-yellow-800'
+                                }`}
+                            >
+                      {appt.status}
+                    </span>
+                        )}
                       </p>
                     </div>
                 ))}

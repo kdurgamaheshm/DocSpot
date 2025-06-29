@@ -7,6 +7,7 @@ const authRoutes = require('./routes/auth');
 const bookingRoutes = require('./routes/booking');
 const userRoutes = require('./routes/user');
 
+
 dotenv.config();
 
 const app = express();
