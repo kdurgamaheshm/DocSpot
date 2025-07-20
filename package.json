@@ -1,0 +1,12 @@
+{
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+  },
+  "dependencies": {
+    "@date-io/dayjs": "^3.2.0",
+    "@mui/x-date-pickers": "^8.9.0",
+    "dayjs": "^1.11.13",
+    "framer-motion": "^12.23.6",
+    "react-router-dom": "^7.7.0"
+  }
+}
